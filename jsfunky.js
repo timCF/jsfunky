@@ -4,11 +4,11 @@
   var maybe_raise, reduce_list, reduce_map,
     __slice = [].slice;
 
-  maybe_raise = function(funky, obj, path, functionname) {
+  maybe_raise = function(jf, obj, path, functionname) {
     if (path.length === 0) {
       throw new Error(functionname + " func failed - empty path " + path);
     }
-    if (!(funky.is_map(obj))) {
+    if (!(jf.is_map(obj))) {
       throw new Error(functionname + " func failed first arg is not object " + obj);
     }
   };
@@ -27,8 +27,8 @@
 
   module.exports = {
     clone: function(some) {
-      var funky;
-      funky = this;
+      var jf;
+      jf = this;
       switch (Object.prototype.toString.call(some)) {
         case "[object Undefined]":
           return void 0;
@@ -46,11 +46,11 @@
           return null;
         case "[object Array]":
           return some.map(function(el) {
-            return funky.clone(el);
+            return jf.clone(el);
           });
         case "[object Object]":
           return Object.keys(some).reduce((function(acc, k) {
-            acc[funky.clone(k)] = funky.clone(some[k]);
+            acc[jf.clone(k)] = jf.clone(some[k]);
             return acc;
           }), {});
         default:
@@ -58,8 +58,8 @@
       }
     },
     equal: function(a, b) {
-      var funky, keys_a, keys_b, len_a, len_b, type_a, type_b, _i, _ref, _ref1, _results;
-      funky = this;
+      var jf, keys_a, keys_b, len_a, len_b, type_a, type_b, _i, _ref, _ref1, _results;
+      jf = this;
       if (a === b) {
         return true;
       } else {
@@ -91,7 +91,7 @@
                   for (var _i = 0; 0 <= len_a ? _i <= len_a : _i >= len_a; 0 <= len_a ? _i++ : _i--){ _results.push(_i); }
                   return _results;
                 }).apply(this).every(function(n) {
-                  return funky.equal(a[n], b[n]);
+                  return jf.equal(a[n], b[n]);
                 });
               } else {
                 return false;
@@ -107,9 +107,9 @@
                 }
                 return lst.sort();
               }), keys_a = _ref1[0], keys_b = _ref1[1];
-              if (funky.equal(keys_a, keys_b)) {
+              if (jf.equal(keys_a, keys_b)) {
                 return keys_a.every(function(k) {
-                  return funky.equal(a[k], b[k]);
+                  return jf.equal(a[k], b[k]);
                 });
               } else {
                 return false;
@@ -148,74 +148,74 @@
       return Object.prototype.toString.call(some) === "[object Object]";
     },
     flatten: function(some) {
-      var funky;
-      funky = this;
-      if (funky.is_list(some)) {
+      var jf;
+      jf = this;
+      if (jf.is_list(some)) {
         return some.reduce((function(acc, el) {
-          if (funky.is_list(el)) {
-            return acc.concat(funky.flatten(el));
+          if (jf.is_list(el)) {
+            return acc.concat(jf.flatten(el));
           } else {
             acc.push(el);
             return acc;
           }
         }), []);
       } else {
-        throw new Error("get not list input " + some + " in funky flatten func");
+        throw new Error("get not list input " + some + " in jf flatten func");
       }
     },
     put_in: function(obj, path, value) {
-      var funky, head, tail;
-      funky = this;
-      maybe_raise(funky, obj, path, "put_in");
+      var head, jf, tail;
+      jf = this;
+      maybe_raise(jf, obj, path, "put_in");
       head = path[0], tail = 2 <= path.length ? __slice.call(path, 1) : [];
       if (tail.length === 0) {
         obj[head] = value;
         return obj;
       } else {
-        obj[head] = funky.put_in(obj[head], tail, value);
+        obj[head] = jf.put_in(obj[head], tail, value);
         return obj;
       }
     },
     get_in: function(obj, path) {
-      var data, funky, head, tail;
-      funky = this;
-      maybe_raise(funky, obj, path, "get_in");
+      var data, head, jf, tail;
+      jf = this;
+      maybe_raise(jf, obj, path, "get_in");
       head = path[0], tail = 2 <= path.length ? __slice.call(path, 1) : [];
       data = obj[head];
       if ((tail.length === 0) || (!data)) {
         return data;
       } else {
-        return funky.get_in(data, tail);
+        return jf.get_in(data, tail);
       }
     },
     update_in: function(obj, path, func) {
-      var data, funky, head, tail;
-      funky = this;
-      maybe_raise(funky, obj, path, "update_in");
+      var data, head, jf, tail;
+      jf = this;
+      maybe_raise(jf, obj, path, "update_in");
       head = path[0], tail = 2 <= path.length ? __slice.call(path, 1) : [];
       data = obj[head];
       if (tail.length === 0) {
-        if (funky.is_function(func) && (func.length === 1)) {
-          obj[head] = func(target);
+        if (jf.is_function(func) && (func.length === 1)) {
+          obj[head] = func(data);
           return obj;
         } else {
           throw new Error("got not function/1 handler in update_in func");
         }
       } else {
-        obj[head] = funky.update_in(data, tail, func);
+        obj[head] = jf.update_in(data, tail, func);
         return obj;
       }
     },
     reduce: function(some, acc, func) {
-      var funky;
-      funky = this;
-      if (funky.is_list(some)) {
-        if (!(funky.is_function(func)) || (func.length !== 2)) {
+      var jf;
+      jf = this;
+      if (jf.is_list(some)) {
+        if (!(jf.is_function(func)) || (func.length !== 2)) {
           throw new Error("reduce func failed - on lists lambda should be function arity 2");
         }
         return reduce_list(some, acc, func);
-      } else if (funky.is_map(some)) {
-        if (!(funky.is_function(func)) || (func.length !== 3)) {
+      } else if (jf.is_map(some)) {
+        if (!(jf.is_function(func)) || (func.length !== 3)) {
           throw new Error("reduce func failed - on maps lambda should be function arity 3");
         }
         return reduce_map(some, acc, func);
