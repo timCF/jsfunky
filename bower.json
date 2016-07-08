@@ -1,0 +1,23 @@
+{
+  "name": "jsfunky",
+  "main": "jsfunky.js",
+  "homepage": "https://github.com/timCF/jsfunky",
+  "description": "Jsfunky is functional utils module for js",
+  "keywords": [
+    "functional",
+    "utils",
+    "js",
+    "javascript"
+  ],
+  "authors": [
+    "timCF"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
