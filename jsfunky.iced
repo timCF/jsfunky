@@ -5,7 +5,7 @@ maybe_raise = (jf, obj, path, functionname) ->
 reduce_list = (lst, acc, func) ->
 	lst.reduce(((acc, el) -> func(el, acc)), acc)
 reduce_map = (obj, acc, func) ->
-	Object.keys(obj).reduce(((acc, k) -> obj[k] = func(k, obj[k], acc)), acc)
+	Object.keys(obj).reduce(((acc, k) -> func(k, obj[k], acc)), acc)
 module.exports =
 	clone: (some) ->
 		jf = @

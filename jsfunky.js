@@ -21,7 +21,7 @@
 
   reduce_map = function(obj, acc, func) {
     return Object.keys(obj).reduce((function(acc, k) {
-      return obj[k] = func(k, obj[k], acc);
+      return func(k, obj[k], acc);
     }), acc);
   };
 
