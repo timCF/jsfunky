@@ -1,6 +1,6 @@
 {
   "name": "jsfunky",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Jsfunky is functional utils module for js",
   "main": "jsfunky.js",
   "directories": {

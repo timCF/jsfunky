@@ -2,7 +2,7 @@
   "name": "jsfunky",
   "main": "jsfunky.js",
   "homepage": "https://github.com/timCF/jsfunky",
-  "version":"1.0.0",
+  "version":"1.0.1",
   "description": "Jsfunky is functional utils module for js",
   "keywords": [
     "functional",
