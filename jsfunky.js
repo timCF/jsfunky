@@ -222,6 +222,14 @@
       } else {
         throw new Error("reduce func failed - unsupported data first arg " + some);
       }
+    },
+    merge: function(target, obj) {
+      var jf;
+      jf = this;
+      return jf.reduce(obj, target, function(k, v, acc) {
+        acc[k] = v;
+        return acc;
+      });
     }
   };
 

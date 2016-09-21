@@ -107,3 +107,6 @@ module.exports =
 			reduce_map(some, acc, func)
 		else
 			throw(new Error("reduce func failed - unsupported data first arg "+some))
+	merge: (target, obj) ->
+		jf = @
+		jf.reduce(obj, target, (k,v,acc) -> acc[k] = v ; acc)
