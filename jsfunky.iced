@@ -6,19 +6,35 @@ reduce_list = (lst, acc, func) ->
 	lst.reduce(((acc, el) -> func(el, acc)), acc)
 reduce_map = (obj, acc, func) ->
 	Object.keys(obj).reduce(((acc, k) -> func(k, obj[k], acc)), acc)
+array_types = [
+	"[object Array]",
+	"[object Int8Array]",
+	"[object Uint8Array]",
+	"[object Uint8ClampedArray]",
+	"[object Int16Array]",
+	"[object Uint16Array]",
+	"[object Int32Array]",
+	"[object Uint32Array]",
+	"[object Float32Array]",
+	"[object Float64Array]"
+]
 module.exports =
 	clone: (some) ->
 		jf = @
-		switch Object.prototype.toString.call(some)
+		this_type = Object.prototype.toString.call(some)
+		switch this_type
 			when "[object Undefined]" then undefined
 			when "[object Boolean]" then some
 			when "[object Number]" then some
 			when "[object String]" then some
 			when "[object Function]" then (new () -> some)
 			when "[object Null]" then null
-			when "[object Array]" then some.map((el) -> jf.clone(el))
 			when "[object Object]" then Object.keys(some).reduce(((acc, k) -> acc[jf.clone(k)] = jf.clone(some[k]); acc), {})
-			else throw(new Error("clone func failed - unsupported data type " + Object.prototype.toString.call(some) + " for object "+some))
+			else
+				if (array_types.indexOf(this_type) != -1)
+					some.map((el) -> jf.clone(el))
+				else
+					throw(new Error("clone func failed - unsupported data type " + Object.prototype.toString.call(some) + " for object "+some))
 	equal: (a, b) ->
 		jf = @
 		if a == b
@@ -33,14 +49,16 @@ module.exports =
 					when "[object String]" then a == b
 					when "[object Function]" then false
 					when "[object Null]" then true
-					when "[object Array]"
-						len_a = a.reduce(((acc, _) -> acc+1), 0)
-						len_b = b.reduce(((acc, _) -> acc+1), 0)
-						if (len_a == len_b) then [0..len_a].every (n) -> jf.equal(a[n], b[n]) else false
 					when "[object Object]"
 						[keys_a, keys_b] = [a,b].map((obj) -> lst = []; lst.push(k) for k, _ of obj; lst.sort() )
 						if jf.equal(keys_a, keys_b) then keys_a.every (k) -> jf.equal(a[k], b[k]) else false
-					else throw(new Error("equal func failed - unsupported data type " + type_a + " for object "+a))
+					else
+						if (array_types.indexOf(type_a) != -1)
+							len_a = a.reduce(((acc, _) -> acc+1), 0)
+							len_b = b.reduce(((acc, _) -> acc+1), 0)
+							if (len_a == len_b) then [0..len_a].every (n) -> jf.equal(a[n], b[n]) else false
+						else
+							throw(new Error("equal func failed - unsupported data type " + type_a + " for object "+a))
 			else
 				false
 	is_undefined: (some) -> Object.prototype.toString.call(some) == "[object Undefined]"

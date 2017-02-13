@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/timCF/jsfunky/issues"
   },
-  "homepage": "https://github.com/timCF/jsfunky#readme"
+  "homepage": "https://github.com/timCF/jsfunky#readme",
+  "devDependencies": {
+    "chai": "^3.5.0"
+  }
 }
